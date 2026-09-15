@@ -1,17 +1,17 @@
-python
 import streamlit as st
 import os
 
-# Groq AI
+# Groq
 try:
     from groq import Groq
+...
 except ImportError:
     Groq = None
 
 
-# =========================================================
-# PAGE CONFIGURATION
-# =========================================================
+# =====================================================
+# PAGE SETUP
+# =====================================================
 
 st.set_page_config(
     page_title="Student Assistant",
@@ -19,311 +19,123 @@ st.set_page_config(
     layout="wide"
 )
 
-
-# =========================================================
-# HEADER
-# =========================================================
-
 st.title("🎓 Student Assistant")
-
-st.write(
-    "A complete student assistant for admission, fees, "
-    "programs, scholarships, merit, GPA and academic guidance."
-)
+st.write("Your complete assistant for admission, fees, scholarships and academics.")
 
 
-# =========================================================
-# SAMPLE PROGRAM DATA
-# =========================================================
+# =====================================================
+# SIDEBAR
+# =====================================================
 
-programs = {
-    "BS Computer Science": {
-        "duration": "4 Years",
-        "eligibility": "FSc / ICS or equivalent",
-        "level": "University"
-    },
+st.sidebar.title("📚 Student Assistant")
 
-    "BS Software Engineering": {
-        "duration": "4 Years",
-        "eligibility": "FSc / ICS or equivalent",
-        "level": "University"
-    },
-
-    "BS Artificial Intelligence": {
-        "duration": "4 Years",
-        "eligibility": "FSc / ICS or equivalent",
-        "level": "University"
-    },
-
-    "BBA": {
-        "duration": "4 Years",
-        "eligibility": "Intermediate or equivalent",
-        "level": "University"
-    },
-
-    "FSc Pre-Engineering": {
-        "duration": "2 Years",
-        "eligibility": "Matric or equivalent",
-        "level": "College"
-    },
-
-    "FSc Pre-Medical": {
-        "duration": "2 Years",
-        "eligibility": "Matric or equivalent",
-        "level": "College"
-    },
-
-    "ICS": {
-        "duration": "2 Years",
-        "eligibility": "Matric or equivalent",
-        "level": "College"
-    }
-}
-
-
-# =========================================================
-# SCHOLARSHIP DATA
-# =========================================================
-
-scholarships = [
-    {
-        "name": "🏆 Merit Scholarship",
-        "description": "For students with strong academic performance.",
-        "requirements": "High academic merit and required documents."
-    },
-
-    {
-        "name": "💰 Need-Based Scholarship",
-        "description": "For students who need financial assistance.",
-        "requirements": "Financial documents and academic record."
-    },
-
-    {
-        "name": "🎓 University Scholarship",
-        "description": "Scholarship offered according to an institution's policy.",
-        "requirements": "Depends on the university or college."
-    },
-
-    {
-        "name": "👨‍👩‍👧 Special Scholarship",
-        "description": "Some institutions provide special financial support.",
-        "requirements": "Depends on the institution."
-    }
-]
-
-
-# =========================================================
-# REQUIRED DOCUMENTS
-# =========================================================
-
-documents = [
-    "CNIC / B-Form",
-    "Passport-size photographs",
-    "Matric result card / certificate",
-    "Intermediate result card / certificate",
-    "Domicile",
-    "Character certificate",
-    "Migration certificate (if required)",
-    "Admission application form",
-    "Father / Guardian CNIC",
-    "Other documents required by institution"
-]
-
-
-# =========================================================
-# SIDEBAR MENU
-# =========================================================
-
-st.sidebar.title("📚 Student Features")
-
-feature = st.sidebar.radio(
-    "Select Feature",
+menu = st.sidebar.selectbox(
+    "Select a Feature",
     [
-        "🏠 Home",
-        "📝 Admission Assistant",
-        "💰 Fee Structure",
-        "🧮 Fee Calculator",
-        "📊 Merit / Aggregate Calculator",
-        "🎓 Programs & Departments",
+        "🎓 Admission Assistant",
+        "💰 Fee Structure + Fee Calculator",
+        "📊 Merit/Aggregate Calculator",
         "💵 Scholarship Finder",
-        "📅 Important Dates",
-        "📈 GPA / CGPA Calculator",
-        "📄 Documents Checklist",
-        "🤖 AI Student Assistant"
+        "📚 Programs & Departments",
+        "📅 Admission/Important Dates",
+        "🧮 GPA/CGPA Calculator",
+        "📄 Admission Document Checklist",
+        "🤖 AI Student Chatbot"
     ]
 )
 
 
-# =========================================================
-# HOME
-# =========================================================
+# =====================================================
+# 1. ADMISSION ASSISTANT
+# =====================================================
 
-if feature == "🏠 Home":
+if menu == "🎓 Admission Assistant":
 
-    st.header("🎓 Welcome to Student Assistant")
+    st.header("🎓 Admission Assistant")
 
     st.write(
-        "This app provides useful tools and information for "
-        "school, college and university students."
+        "Find basic admission information for school, college and university students."
     )
 
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.info(
-            "📝 Admissions\n\n"
-            "Admission requirements, eligibility and procedure."
-        )
-
-    with col2:
-        st.info(
-            "💰 Fees\n\n"
-            "Fee structure and fee calculation."
-        )
-
-    with col3:
-        st.info(
-            "🎓 Scholarships\n\n"
-            "Explore different scholarship options."
-        )
-
-    st.subheader("✨ Available Features")
-
-    features = [
-        "📝 Admission Assistant",
-        "💰 Fee Structure",
-        "🧮 Fee Calculator",
-        "📊 Merit / Aggregate Calculator",
-        "🎓 Programs & Departments",
-        "💵 Scholarship Finder",
-        "📅 Important Dates",
-        "📈 GPA / CGPA Calculator",
-        "📄 Documents Checklist",
-        "🤖 AI Student Assistant"
-    ]
-
-    for item in features:
-        st.write("✅", item)
-
-
-# =========================================================
-# ADMISSION ASSISTANT
-# =========================================================
-
-elif feature == "📝 Admission Assistant":
-
-    st.header("📝 Admission Assistant")
-
-    education_level = st.selectbox(
+    level = st.selectbox(
         "Select Education Level",
-        [
-            "🏫 School",
-            "🎒 College",
-            "🎓 University"
-        ]
+        ["School", "College", "University"]
     )
 
-    st.subheader("Admission Information")
-
-    st.write(
-        f"Selected Level: **{education_level}**"
+    program = st.text_input(
+        "Enter Program",
+        placeholder="Example: BS Computer Science"
     )
 
-    program = st.selectbox(
-        "Select Program",
-        list(programs.keys())
-    )
+    if st.button("Show Admission Information"):
 
-    data = programs[program]
+        if program:
 
-    st.write("### Program Information")
+            st.subheader("Admission Information")
 
-    st.write("**Program:**", program)
-    st.write("**Level:**", data["level"])
-    st.write("**Duration:**", data["duration"])
-    st.write("**Basic Eligibility:**", data["eligibility"])
+            st.write("**Education Level:**", level)
+            st.write("**Program:**", program)
 
-    st.subheader("📋 General Admission Procedure")
+            st.write("### General Eligibility")
+            st.write(
+                "Eligibility depends on the institution and selected program."
+            )
 
-    admission_steps = [
-        "Check eligibility criteria",
-        "Select your desired program",
-        "Prepare required documents",
-        "Complete the admission application",
-        "Submit the application",
-        "Appear in entry test if required",
-        "Check merit list",
-        "Pay admission / semester fee",
-        "Complete enrollment"
-    ]
+            st.write("### General Admission Process")
 
-    for number, step in enumerate(admission_steps, 1):
-        st.write(f"**{number}.** {step}")
+            steps = [
+                "Check eligibility",
+                "Select your program",
+                "Prepare required documents",
+                "Submit admission application",
+                "Appear in entry test if required",
+                "Check merit list",
+                "Pay admission/semester fee",
+                "Complete enrollment"
+            ]
+
+            for i, step in enumerate(steps, 1):
+                st.write(f"{i}. {step}")
+
+        else:
+            st.warning("Please enter a program name.")
 
 
-# =========================================================
-# FEE STRUCTURE
-# =========================================================
+# =====================================================
+# 2. FEE STRUCTURE + FEE CALCULATOR
+# =====================================================
 
-elif feature == "💰 Fee Structure":
+elif menu == "💰 Fee Structure + Fee Calculator":
 
-    st.header("💰 Fee Structure")
+    st.header("💰 Fee Structure + Fee Calculator")
 
-    st.info(
-        "Enter the fee information of your institution "
-        "to view an estimated structure."
-    )
+    st.subheader("Fee Structure")
 
-    tuition = st.number_input(
+    tuition_fee = st.number_input(
         "Tuition Fee per Credit Hour (Rs.)",
         min_value=0,
-        value=12000,
-        step=500
+        value=12000
     )
 
-    admission = st.number_input(
+    admission_fee = st.number_input(
         "Admission Fee (Rs.)",
         min_value=0,
-        value=15000,
-        step=1000
+        value=15000
     )
 
-    examination = st.number_input(
+    examination_fee = st.number_input(
         "Examination Fee (Rs.)",
         min_value=0,
-        value=5000,
-        step=500
+        value=5000
     )
 
-    library = st.number_input(
-        "Library / Other Charges (Rs.)",
+    other_fee = st.number_input(
+        "Other Charges (Rs.)",
         min_value=0,
-        value=3000,
-        step=500
+        value=3000
     )
 
-    st.subheader("Fee Information")
-
-    st.write(f"**Tuition Fee / Credit Hour:** Rs. {tuition:,}")
-    st.write(f"**Admission Fee:** Rs. {admission:,}")
-    st.write(f"**Examination Fee:** Rs. {examination:,}")
-    st.write(f"**Library / Other Charges:** Rs. {library:,}")
-
-
-# =========================================================
-# FEE CALCULATOR
-# =========================================================
-
-elif feature == "🧮 Fee Calculator":
-
-    st.header("🧮 Fee Calculator")
-
-    fee_per_credit = st.number_input(
-        "Fee per Credit Hour (Rs.)",
-        min_value=0,
-        value=12000,
-        step=500
-    )
+    st.subheader("🧮 Fee Calculator")
 
     credit_hours = st.number_input(
         "Credit Hours",
@@ -332,59 +144,48 @@ elif feature == "🧮 Fee Calculator":
         value=15
     )
 
-    admission_fee = st.number_input(
-        "Admission / Other Fee (Rs.)",
-        min_value=0,
-        value=15000,
-        step=1000
-    )
-
-    examination_fee = st.number_input(
-        "Examination Fee (Rs.)",
-        min_value=0,
-        value=5000,
-        step=500
-    )
-
     if st.button("Calculate Total Fee"):
 
-        tuition_fee = fee_per_credit * credit_hours
+        tuition_total = tuition_fee * credit_hours
 
         total_fee = (
-            tuition_fee
+            tuition_total
             + admission_fee
             + examination_fee
-        )
-
-        st.subheader("💰 Fee Summary")
-
-        st.write(
-            f"Tuition Fee: **Rs. {tuition_fee:,}**"
+            + other_fee
         )
 
         st.write(
-            f"Admission / Other Fee: **Rs. {admission_fee:,}**"
+            f"Tuition Fee: **Rs. {tuition_total:,}**"
+        )
+
+        st.write(
+            f"Admission Fee: **Rs. {admission_fee:,}**"
         )
 
         st.write(
             f"Examination Fee: **Rs. {examination_fee:,}**"
         )
 
+        st.write(
+            f"Other Charges: **Rs. {other_fee:,}**"
+        )
+
         st.success(
-            f"Estimated Total Fee: Rs. {total_fee:,}"
+            f"💰 Total Estimated Fee: Rs. {total_fee:,}"
         )
 
 
-# =========================================================
-# MERIT / AGGREGATE CALCULATOR
-# =========================================================
+# =====================================================
+# 3. MERIT / AGGREGATE CALCULATOR
+# =====================================================
 
-elif feature == "📊 Merit / Aggregate Calculator":
+elif menu == "📊 Merit/Aggregate Calculator":
 
     st.header("📊 Merit / Aggregate Calculator")
 
     st.write(
-        "Enter your percentages and their weightages."
+        "Enter your marks and weightages. Total weightage must be 100%."
     )
 
     matric = st.number_input(
@@ -395,7 +196,7 @@ elif feature == "📊 Merit / Aggregate Calculator":
     )
 
     intermediate = st.number_input(
-        "Intermediate / FSc Percentage",
+        "Intermediate Percentage",
         min_value=0.0,
         max_value=100.0,
         value=75.0
@@ -408,28 +209,30 @@ elif feature == "📊 Merit / Aggregate Calculator":
         value=70.0
     )
 
+    st.subheader("Weightages")
+
     matric_weight = st.number_input(
-        "Matric Weightage (%)",
+        "Matric Weightage",
         min_value=0.0,
         max_value=100.0,
         value=10.0
     )
 
     intermediate_weight = st.number_input(
-        "Intermediate Weightage (%)",
+        "Intermediate Weightage",
         min_value=0.0,
         max_value=100.0,
         value=40.0
     )
 
     test_weight = st.number_input(
-        "Entry Test Weightage (%)",
+        "Entry Test Weightage",
         min_value=0.0,
         max_value=100.0,
         value=50.0
     )
 
-    if st.button("Calculate Merit"):
+    if st.button("Calculate Aggregate"):
 
         total_weight = (
             matric_weight
@@ -440,198 +243,206 @@ elif feature == "📊 Merit / Aggregate Calculator":
         if total_weight != 100:
 
             st.error(
-                f"Total weightage must be 100%. "
-                f"Current weightage is {total_weight}%."
+                f"Weightage must be 100%. Current total is {total_weight}%."
             )
 
         else:
 
             aggregate = (
-                (matric * matric_weight / 100)
-                + (intermediate * intermediate_weight / 100)
-                + (entry_test * test_weight / 100)
+                matric * matric_weight / 100
+                + intermediate * intermediate_weight / 100
+                + entry_test * test_weight / 100
             )
 
             st.success(
-                f"🎯 Your Aggregate is {aggregate:.2f}%"
+                f"📊 Your Aggregate is: {aggregate:.2f}%"
             )
 
 
-# =========================================================
-# PROGRAMS & DEPARTMENTS
-# =========================================================
+# =====================================================
+# 4. SCHOLARSHIP FINDER
+# =====================================================
 
-elif feature == "🎓 Programs & Departments":
-
-    st.header("🎓 Programs & Departments")
-
-    selected_program = st.selectbox(
-        "Select Program",
-        list(programs.keys())
-    )
-
-    data = programs[selected_program]
-
-    st.subheader(selected_program)
-
-    st.write(
-        "**Education Level:**",
-        data["level"]
-    )
-
-    st.write(
-        "**Duration:**",
-        data["duration"]
-    )
-
-    st.write(
-        "**Eligibility:**",
-        data["eligibility"]
-    )
-
-    st.subheader("💼 Possible Career Areas")
-
-    career_options = {
-
-        "BS Computer Science": [
-            "Software Developer",
-            "Web Developer",
-            "Data Analyst",
-            "AI Engineer"
-        ],
-
-        "BS Software Engineering": [
-            "Software Engineer",
-            "QA Engineer",
-            "Web Developer",
-            "Application Developer"
-        ],
-
-        "BS Artificial Intelligence": [
-            "AI Engineer",
-            "Machine Learning Engineer",
-            "Data Scientist",
-            "AI Developer"
-        ],
-
-        "BBA": [
-            "Business Analyst",
-            "Marketing",
-            "Finance",
-            "Management"
-        ],
-
-        "FSc Pre-Engineering": [
-            "Engineering",
-            "Computer Science",
-            "Architecture",
-            "Technology"
-        ],
-
-        "FSc Pre-Medical": [
-            "Medicine",
-            "Dentistry",
-            "Pharmacy",
-            "Biological Sciences"
-        ],
-
-        "ICS": [
-            "Computer Science",
-            "Software Engineering",
-            "IT",
-            "Artificial Intelligence"
-        ]
-    }
-
-    for career in career_options[selected_program]:
-        st.write("•", career)
-
-
-# =========================================================
-# SCHOLARSHIP FINDER
-# =========================================================
-
-elif feature == "💵 Scholarship Finder":
+elif menu == "💵 Scholarship Finder":
 
     st.header("💵 Scholarship Finder")
 
     st.write(
-        "Explore common scholarship categories "
-        "for students."
+        "Find common scholarship categories for students."
     )
 
-    for scholarship in scholarships:
+    scholarships = {
+        "🏆 Merit Scholarship":
+            "For students with strong academic performance.",
 
-        with st.expander(scholarship["name"]):
+        "💰 Need-Based Scholarship":
+            "For students who need financial assistance.",
 
-            st.write(
-                "**Description:**",
-                scholarship["description"]
-            )
+        "🎓 University Scholarship":
+            "Scholarship offered according to university policy.",
 
-            st.write(
-                "**Basic Requirements:**",
-                scholarship["requirements"]
-            )
-
-
-# =========================================================
-# IMPORTANT DATES
-# =========================================================
-
-elif feature == "📅 Important Dates":
-
-    st.header("📅 Important Dates")
-
-    st.info(
-        "These are sample dates. Actual dates depend "
-        "on the institution."
-    )
-
-    dates = {
-        "Admission Opens": "01 September",
-        "Application Deadline": "30 September",
-        "Entry Test": "10 October",
-        "Merit List": "20 October",
-        "Fee Submission Deadline": "25 October",
-        "Classes Begin": "01 November"
+        "📚 Academic Scholarship":
+            "For students with excellent academic results."
     }
 
-    for event, date in dates.items():
+    for name, description in scholarships.items():
 
-        col1, col2 = st.columns(2)
+        with st.expander(name):
+            st.write(description)
 
-        with col1:
-            st.write(f"📌 **{event}**")
+            st.write("### Common Requirements")
 
-        with col2:
-            st.write(date)
+            st.write("• Academic documents")
+            st.write("• Scholarship application")
+            st.write("• Required financial documents if applicable")
 
-
-# =========================================================
-# GPA / CGPA CALCULATOR
-# =========================================================
-
-elif feature == "📈 GPA / CGPA Calculator":
-
-    st.header("📈 GPA / CGPA Calculator")
-
-    st.write(
-        "Enter credit hours and grade points "
-        "for each course."
+    st.info(
+        "Actual scholarship eligibility depends on the institution or scholarship provider."
     )
 
-    courses = st.number_input(
+
+# =====================================================
+# 5. PROGRAMS & DEPARTMENTS
+# =====================================================
+
+elif menu == "📚 Programs & Departments":
+
+    st.header("📚 Programs & Departments")
+
+    programs = {
+        "Computer Science": [
+            "BS Computer Science",
+            "BS Artificial Intelligence",
+            "BS Data Science"
+        ],
+
+        "Engineering": [
+            "Computer Engineering",
+            "Electrical Engineering",
+            "Civil Engineering"
+        ],
+
+        "Business": [
+            "BBA",
+            "BS Accounting & Finance",
+            "BS Management"
+        ],
+
+        "Medical": [
+            "MBBS",
+            "BDS",
+            "Pharm-D"
+        ]
+    }
+
+    department = st.selectbox(
+        "Select Department",
+        list(programs.keys())
+    )
+
+    st.subheader(department)
+
+    for program in programs[department]:
+        st.write("🎓", program)
+
+    st.subheader("Program Information")
+
+    selected_program = st.selectbox(
+        "Select a Program",
+        programs[department]
+    )
+
+    st.write("**Selected Program:**", selected_program)
+
+    st.write(
+        "Program duration, eligibility and career options can be added "
+        "according to the official institution information."
+    )
+
+
+# =====================================================
+# 6. ADMISSION / IMPORTANT DATES
+# =====================================================
+
+elif menu == "📅 Admission/Important Dates":
+
+    st.header("📅 Admission / Important Dates")
+
+    st.write(
+        "Keep important admission events in one place."
+    )
+
+    admission_open = st.date_input(
+        "Admission Opening Date"
+    )
+
+    application_deadline = st.date_input(
+        "Application Deadline"
+    )
+
+    entry_test = st.date_input(
+        "Entry Test Date"
+    )
+
+    merit_list = st.date_input(
+        "Merit List Date"
+    )
+
+    classes_start = st.date_input(
+        "Classes Start Date"
+    )
+
+    st.subheader("📋 Important Dates")
+
+    st.write(
+        "🟢 Admission Opens:",
+        admission_open
+    )
+
+    st.write(
+        "🔴 Application Deadline:",
+        application_deadline
+    )
+
+    st.write(
+        "📝 Entry Test:",
+        entry_test
+    )
+
+    st.write(
+        "📊 Merit List:",
+        merit_list
+    )
+
+    st.write(
+        "🎓 Classes Start:",
+        classes_start
+    )
+
+
+# =====================================================
+# 7. GPA / CGPA CALCULATOR
+# =====================================================
+
+elif menu == "🧮 GPA/CGPA Calculator":
+
+    st.header("🧮 GPA / CGPA Calculator")
+
+    st.write(
+        "Enter the credit hours and grade points for your courses."
+    )
+
+    number_of_courses = st.number_input(
         "Number of Courses",
         min_value=1,
         max_value=10,
         value=5
     )
 
-    total_quality_points = 0
-    total_credit_hours = 0
+    total_quality_points = 0.0
+    total_credit_hours = 0.0
 
-    for i in range(int(courses)):
+    for i in range(int(number_of_courses)):
 
         col1, col2 = st.columns(2)
 
@@ -664,37 +475,47 @@ elif feature == "📈 GPA / CGPA Calculator":
 
     if st.button("Calculate GPA"):
 
-        if total_credit_hours > 0:
+        gpa = (
+            total_quality_points
+            / total_credit_hours
+        )
 
-            gpa = (
-                total_quality_points
-                / total_credit_hours
-            )
-
-            st.success(
-                f"📈 Your GPA is {gpa:.2f}"
-            )
+        st.success(
+            f"🧮 Your GPA is: {gpa:.2f}"
+        )
 
 
-# =========================================================
-# DOCUMENT CHECKLIST
-# =========================================================
+# =====================================================
+# 8. ADMISSION DOCUMENT CHECKLIST
+# =====================================================
 
-elif feature == "📄 Documents Checklist":
+elif menu == "📄 Admission Document Checklist":
 
-    st.header("📄 Admission Documents Checklist")
+    st.header("📄 Admission Document Checklist")
 
     st.write(
-        "Check the documents you already have."
+        "Check the documents that you already have."
     )
+
+    documents = [
+        "CNIC / B-Form",
+        "Passport-size photographs",
+        "Matric Certificate / Result Card",
+        "Intermediate Certificate / Result Card",
+        "Domicile",
+        "Character Certificate",
+        "Migration Certificate",
+        "Admission Application Form",
+        "Father / Guardian CNIC"
+    ]
 
     completed = 0
 
-    for index, document in enumerate(documents):
+    for i, document in enumerate(documents):
 
         checked = st.checkbox(
             document,
-            key=f"document_{index}"
+            key=f"document_{i}"
         )
 
         if checked:
@@ -702,11 +523,9 @@ elif feature == "📄 Documents Checklist":
 
     total_documents = len(documents)
 
-    progress = (
+    st.progress(
         completed / total_documents
     )
-
-    st.progress(progress)
 
     st.write(
         f"Completed: **{completed}/{total_documents}**"
@@ -715,29 +534,28 @@ elif feature == "📄 Documents Checklist":
     if completed == total_documents:
 
         st.success(
-            "🎉 All documents are ready!"
+            "🎉 All documents are checked!"
         )
 
 
-# =========================================================
-# AI STUDENT ASSISTANT
-# =========================================================
+# =====================================================
+# 9. AI STUDENT CHATBOT
+# =====================================================
 
-elif feature == "🤖 AI Student Assistant":
+elif menu == "🤖 AI Student Chatbot":
 
-    st.header("🤖 AI Student Assistant")
+    st.header("🤖 AI Student Chatbot")
 
     st.write(
-        "Ask questions about admissions, fees, "
-        "scholarships, programs, GPA, CGPA and "
-        "general education."
+        "Ask questions about admissions, fees, scholarships, "
+        "programs, GPA, CGPA and general student guidance."
     )
 
     question = st.text_area(
         "Ask your question",
         placeholder=(
-            "Example: What documents are normally "
-            "required for university admission?"
+            "Example: What documents are normally required "
+            "for university admission?"
         )
     )
 
@@ -745,7 +563,7 @@ elif feature == "🤖 AI Student Assistant":
 
         if not question.strip():
 
-            st.error(
+            st.warning(
                 "Please enter a question."
             )
 
@@ -755,19 +573,18 @@ elif feature == "🤖 AI Student Assistant":
 
             if not api_key:
 
-                st.warning(
-                    "AI API key is not configured."
+                st.error(
+                    "GROQ_API_KEY is not configured."
                 )
 
                 st.info(
-                    "You can still use all the "
-                    "non-AI features of this app."
+                    "The other student features can still be used."
                 )
 
             elif Groq is None:
 
                 st.error(
-                    "Groq package is not available."
+                    "Groq package is not installed."
                 )
 
             else:
@@ -786,20 +603,18 @@ elif feature == "🤖 AI Student Assistant":
                             {
                                 "role": "system",
                                 "content": (
-                                    "You are an AI Student Assistant. "
-                                    "Help students with admissions, "
-                                    "fees, scholarships, programs, "
-                                    "GPA, CGPA, merit and general "
-                                    "education questions. "
-                                    "Use simple and clear language. "
-                                    "Do not invent official university "
-                                    "information. If information "
-                                    "depends on a specific institution, "
-                                    "tell the student to verify it "
-                                    "from the official institution."
+                                    "You are a helpful AI Student Chatbot. "
+                                    "Help students with admission, fees, "
+                                    "scholarships, programs, GPA, CGPA "
+                                    "and general education questions. "
+                                    "Use simple language. "
+                                    "Do not make up official university "
+                                    "information. If information depends "
+                                    "on a specific institution, tell the "
+                                    "student to verify it from the official "
+                                    "institution."
                                 )
                             },
-
                             {
                                 "role": "user",
                                 "content": question
@@ -809,12 +624,7 @@ elif feature == "🤖 AI Student Assistant":
                         temperature=0.2
                     )
 
-                    answer = (
-                        response
-                        .choices[0]
-                        .message
-                        .content
-                    )
+                    answer = response.choices[0].message.content
 
                     st.subheader("🤖 AI Answer")
 
@@ -823,18 +633,5 @@ elif feature == "🤖 AI Student Assistant":
                 except Exception as error:
 
                     st.error(
-                        f"Error: {error}"
+                        f"AI Error: {error}"
                     )
-
-
-# =========================================================
-# FOOTER
-# =========================================================
-
-st.divider()
-
-st.caption(
-    "🎓 Student Assistant — Admission, Fees, "
-    "Scholarships, Merit, GPA and Student Guidance"
-)
-
