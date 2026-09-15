@@ -837,4 +837,4 @@ st.caption(
     "🎓 Student Assistant — Admission, Fees, "
     "Scholarships, Merit, GPA and Student Guidance"
 )
-```
+
