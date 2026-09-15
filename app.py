@@ -699,7 +699,7 @@ GitHub repository mein sirf ye 2 files upload karke bhi start kar sakte ho:
 
 ```text
 student-assistant/
-│
+# |
 ├── app.py
 └── requirements.txt
 ```
