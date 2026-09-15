@@ -683,7 +683,7 @@ Is version mein **sample fee, dates, programs aur scholarship information** rakh
 
 Aur AI Assistant ke liye Streamlit Cloud mein:
 
-**App → Settings → Secrets**
+# **App -> Settings -> Secrets**
 
 mein:
 
